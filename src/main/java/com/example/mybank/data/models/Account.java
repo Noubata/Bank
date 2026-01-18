@@ -1,9 +1,6 @@
 package com.example.mybank.data.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +12,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Account {
+    @ManyToOne
+    @JoinColumn(name = "bank_id")
+    private Bank bank;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

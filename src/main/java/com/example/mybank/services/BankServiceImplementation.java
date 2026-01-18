@@ -8,6 +8,7 @@ import com.example.mybank.dtos.requests.*;
 import com.example.mybank.dtos.responses.*;
 import com.example.mybank.exceptions.AccountException;
 import com.example.mybank.exceptions.BankException;
+import com.example.mybank.exceptions.IllegalAmountException;
 import com.example.mybank.exceptions.InsufficientFunds;
 import com.example.mybank.utils.BankMapper;
 import org.apache.catalina.mapper.Mapper;
@@ -42,6 +43,13 @@ public class BankServiceImplementation implements BankService {
         if (bank == null) {
             throw new BankException("Bank not found");
         }
+        if (request.getAmount() <= 0) {
+            throw new IllegalAmountException("Deposit amount must be positive");
+        }
+        if (request.getBankId() == null) {
+            throw new BankException("Bank ID is required for deposit");
+        }
+
         Account account = validateAndGetAccount(bank, request.getAccountNumber());
         double newBalance = account.getBalance() + request.getAmount();
         account.setBalance(newBalance);
@@ -52,6 +60,9 @@ public class BankServiceImplementation implements BankService {
     @Override
     public CreateAccountResponse createAccount (CreateAccountRequest request){
         Bank bank = bankRepository.findBankById(request.getId());
+        if (request.getId() == null) {
+            throw new BankException("Bank ID is required");
+        }
         if (bank == null) {
             throw new BankException("Bank not found");
         }
@@ -60,6 +71,8 @@ public class BankServiceImplementation implements BankService {
         account.setUserName(request.getUserName());
         account.setPassword(request.getPassword());
         account.setBalance(0.0);
+        account.setAccountNumber(nuban);
+        account.setBank(bank);
         accountRepository.save(account);
         return BankMapper.toCreateAccountResponse(account);
     }

@@ -13,8 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TransferToAnotherBankRequest {
     private long id;
-    private BankRepository bankRepository;
-    private AccountRepository accountRepository;
+//    private BankRepository bankRepository;
+//    private AccountRepository accountRepository;
     private String fromAccountNumber;
     private String toAccountNumber;
     private double amount;

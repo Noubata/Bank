@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateAccountRequest {
     private Long id;
-    private String UserName;
+    private String userName;
     private String phoneNumber;
     private String email;
     private String password;
