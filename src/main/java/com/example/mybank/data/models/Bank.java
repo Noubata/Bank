@@ -20,7 +20,7 @@ public class Bank {
     private Long id;
     private String bankName;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     @JoinColumn(name = "bank_id")
     private List<Account> accounts = new ArrayList<>();
 }
