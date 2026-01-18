@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransferResponse {
-    private double fromAccountBalance;
-    private double toAccountBalance;
+public class TransferToAnotherBankResponse {
+    private double senderBalance;
+    private double receiverBalance;
     private String message;
 }

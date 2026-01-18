@@ -1,13 +1,7 @@
 package com.example.mybank.services;
 
-import com.example.mybank.dtos.requests.CreateAccountRequest;
-import com.example.mybank.dtos.requests.DepositRequest;
-import com.example.mybank.dtos.requests.TransferRequest;
-import com.example.mybank.dtos.requests.WithdrawRequest;
-import com.example.mybank.dtos.responses.CreateAccountResponse;
-import com.example.mybank.dtos.responses.DepositResponse;
-import com.example.mybank.dtos.responses.TransferResponse;
-import com.example.mybank.dtos.responses.WithdrawResponse;
+import com.example.mybank.dtos.requests.*;
+import com.example.mybank.dtos.responses.*;
 
 
 public interface BankService {
@@ -15,4 +9,6 @@ public interface BankService {
     CreateAccountResponse createAccount(CreateAccountRequest request);
     WithdrawResponse withdraw(WithdrawRequest request);
     TransferResponse transfer(TransferRequest request);
+    TransferToAnotherBankResponse transferToAnotherBank(TransferToAnotherBankRequest request);
+    ShowBalanceResponse showBalance(ShowBalanceRequest request);
 }

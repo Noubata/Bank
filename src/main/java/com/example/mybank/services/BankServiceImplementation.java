@@ -2,17 +2,10 @@ package com.example.mybank.services;
 
 import com.example.mybank.data.models.Account;
 import com.example.mybank.data.models.Bank;
-import com.example.mybank.data.repositories.AccountNumberGeneratorRepository;
 import com.example.mybank.data.repositories.AccountRepository;
 import com.example.mybank.data.repositories.BankRepository;
-import com.example.mybank.dtos.requests.CreateAccountRequest;
-import com.example.mybank.dtos.requests.DepositRequest;
-import com.example.mybank.dtos.requests.TransferRequest;
-import com.example.mybank.dtos.requests.WithdrawRequest;
-import com.example.mybank.dtos.responses.CreateAccountResponse;
-import com.example.mybank.dtos.responses.DepositResponse;
-import com.example.mybank.dtos.responses.TransferResponse;
-import com.example.mybank.dtos.responses.WithdrawResponse;
+import com.example.mybank.dtos.requests.*;
+import com.example.mybank.dtos.responses.*;
 import com.example.mybank.exceptions.AccountException;
 import com.example.mybank.exceptions.BankException;
 import com.example.mybank.exceptions.InsufficientFunds;
@@ -99,5 +92,37 @@ public class BankServiceImplementation implements BankService {
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
         return BankMapper.toTransferResponse(fromAccount.getBalance(), toAccount.getBalance());
+    }
+    @Override
+    public TransferToAnotherBankResponse transferToAnotherBank(TransferToAnotherBankRequest request){
+        Bank bank = bankRepository.findBankById(request.getId());
+        if (bank == null) {
+            throw new BankException("Bank not found");
+        }
+        Account fromAccount = validateAndGetAccount(bank, request.getFromAccountNumber());
+        Account toAccount = accountRepository.findAccountByAccountNumber(request.getToAccountNumber());
+        if (toAccount == null) {
+            throw new BankException("Destination account not found");
+        }
+        if (fromAccount.getBalance() < request.getAmount()) {
+            throw new InsufficientFunds("Insufficient funds in source account");
+        }
+        fromAccount.setBalance(fromAccount.getBalance() - request.getAmount());
+        toAccount.setBalance(toAccount.getBalance() + request.getAmount());
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
+        return BankMapper.toTransferToAnotherBankResponse(fromAccount.getBalance(), toAccount.getBalance());
+    }
+    @Override
+    public ShowBalanceResponse showBalance(ShowBalanceRequest request) {
+
+        Account account = accountRepository.findAccountByAccountNumber(request.getAccountNumber());
+        if (account == null) {
+            throw new AccountException("Account not found!");
+        }
+        if (!account.getPassword().equals(request.getPassword())) {
+            throw new AccountException("Invalid password!");
+        }
+        return BankMapper.toShowBalanceResponse(account.getAccountNumber(), account.getBalance());
     }
 }
